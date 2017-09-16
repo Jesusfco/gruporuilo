@@ -19,3 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('visiflex/user', 'UserController@getMyUser');
+
+Route::post('visiflex/user/createUser', 'UserController@createUser');
+Route::get('visiflex/users', 'UserController@getUsers');
