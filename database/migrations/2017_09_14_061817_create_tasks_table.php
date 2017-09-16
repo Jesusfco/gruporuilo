@@ -20,6 +20,7 @@ class CreateTasksTable extends Migration
             $table->text('description')->nullable();
             $table->integer('level');
             $table->boolean('status')->default(0);
+            $table->integer('createBy')->nullable();
             $table->timestamps();
         });
     }

@@ -21,6 +21,8 @@ class CreateTaskProgressesTable extends Migration
             $table->boolean('read')->default(0);
             $table->integer('progress')->nullable();
 
+            $table->integer('modifyBy')->nullable();
+
             $table->dateTime('readTime')->nullable();
 
             $table->timestamps();

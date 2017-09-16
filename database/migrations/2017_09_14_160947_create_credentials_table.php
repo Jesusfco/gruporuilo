@@ -17,6 +17,7 @@ class CreateCredentialsTable extends Migration
             $table->increments('id');
             $table->integer('userId');
             $table->integer('systemId');
+            $table->integer('createBy')->nullable();
             $table->timestamps();
         });
     }
