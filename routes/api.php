@@ -22,3 +22,5 @@ Route::get('visiflex/user', 'UserController@getMyUser');
 
 Route::post('visiflex/user/createUser', 'UserController@createUser');
 Route::get('visiflex/users', 'UserController@getUsers');
+
+Route::post('visiflex/login', 'LoginController@login');
