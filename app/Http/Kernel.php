@@ -60,5 +60,8 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \GrupoRuilo\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'user1' => \GrupoRuilo\Http\Middleware\UserType1Middleware::class,
+        'user9' => \GrupoRuilo\Http\Middleware\UserType9Middleware::class,
+        'user10' => \GrupoRuilo\Http\Middleware\UserType10Middleware::class,
     ];
 }

@@ -8,6 +8,12 @@ use GrupoRuilo\Credential;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        //$this->middleware('auth');
+
+    }
     public function getUsers(){
         return response()->json(User::all());
     }
