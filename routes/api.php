@@ -20,8 +20,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('visiflex/user', 'UserController@getMyUser');
 
-Route::post('visiflex/user/createUser', 'UserController@createUser');
 Route::get('visiflex/users', 'UserController@getUsers');
+Route::post('visiflex/user/createUser', 'UserController@createUser');
+Route::put('visiflex/user/{id}', 'UserController@editUser');
+
 
 Route::post('visiflex/login', 'LoginController@login');
 Route::get ('visiflex/login/check', 'LoginController@checkAuth');

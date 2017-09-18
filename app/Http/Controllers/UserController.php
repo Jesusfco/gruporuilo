@@ -8,10 +8,8 @@ use GrupoRuilo\Credential;
 
 class UserController extends Controller
 {
-    public function getMyUser(){
-
-        return response()->json('que pedo');
-
+    public function getUsers(){
+        return response()->json(User::all());
     }
 
     public function createUser(Request $request){
@@ -35,8 +33,24 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    public function editUser(Request $request, $id){
 
-    public function getUsers(){
-        return response()->json(User::all());
+        $user = User::find($id);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->type = $request->type;
+        $user->phone = $request->phone;
+        $user->enterprise = $request->enterprise;
+
+        if($request->password != NULL && $request->password !== ''){
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
+        return response()->json(true);
+
     }
+
 }
