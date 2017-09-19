@@ -27,3 +27,7 @@ Route::put('visiflex/user/{id}', 'UserController@editUser');
 
 Route::post('visiflex/login', 'LoginController@signin');
 Route::get ('visiflex/login/check', 'LoginController@checkAuth');
+
+Route::post('visiflex/user/find', 'UserController@findUser');
+Route::post('visiflex/user/findId', 'UserController@findUserId');
+Route::post('visiflex/user/sugest', 'UserController@sugestUsers');

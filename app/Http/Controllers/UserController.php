@@ -63,4 +63,26 @@ class UserController extends Controller
 
     }
 
+    public function findUser(Request $request){
+        $user =  User::find($request->id);
+        if($user->active == 0){
+            return response()->json(['message' => 'User Inactive']);
+        }
+        return response()->json(['id' => $user->id]);
+    }
+
+    public function findUserId(Request $request){
+        $user =  User::first()->where(['name', '=', $request->name],['active',1]);
+
+        return response()->json(['id' => $user->id]);
+    }
+
+    public function sugestUsers(Request $request){
+        $users = User::where(['name', 'LIKE', $request->name],
+                            ['active','=', 1],
+                            ['type', '<', '10']);
+
+        return response()->json([users => $users],201);
+    }
+
 }
