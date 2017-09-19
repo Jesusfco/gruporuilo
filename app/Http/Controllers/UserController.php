@@ -5,6 +5,8 @@ namespace GrupoRuilo\Http\Controllers;
 use Illuminate\Http\Request;
 use GrupoRuilo\User;
 use GrupoRuilo\Credential;
+use JWTAuth;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -72,17 +74,22 @@ class UserController extends Controller
     }
 
     public function findUserId(Request $request){
-        $user =  User::first()->where(['name', '=', $request->name],['active',1]);
+        $user =  User::where([
+                    ['name', 'LIKE', $request->name . '%'],
+                    ['active',1]
+                ])->first();
 
         return response()->json(['id' => $user->id]);
     }
 
     public function sugestUsers(Request $request){
-        $users = User::where(['name', 'LIKE', $request->name],
-                            ['active','=', 1],
-                            ['type', '<', '10']);
+        $users = User::where([
+                        ['name', 'LIKE', $request->name . '%'],
+                        ['active', 1],
+                        ['type', '<',10]
+                        ])->select('name','id')->get();
 
-        return response()->json([users => $users],201);
+        return response()->json([ 'users' => $users]);
     }
 
 }

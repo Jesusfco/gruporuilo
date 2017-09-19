@@ -31,3 +31,5 @@ Route::get ('visiflex/login/check', 'LoginController@checkAuth');
 Route::post('visiflex/user/find', 'UserController@findUser');
 Route::post('visiflex/user/findId', 'UserController@findUserId');
 Route::post('visiflex/user/sugest', 'UserController@sugestUsers');
+
+Route::post('visiflex/task/create', 'TaskController@create');
