@@ -19,10 +19,9 @@ class UserType10Middleware
             return response()->json(['message' => 'User not found'], 404);
         }else if(! Auth::user()->active == 1) {
             return response()->json(['message' => 'User disable'], 403);
-        }else if(! Auth::user()->type == 10) {
-            return response()->json(['message' => 'User dont have credentials'], 402);
+        }else if(Auth::user()->type == 10) {
+            return $next($request);
         }
-        return $next($request);
-
+        return response()->json(['message' => 'User dont have credentials'], 402);
     }
 }

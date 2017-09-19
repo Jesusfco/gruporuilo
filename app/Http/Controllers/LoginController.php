@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use GrupoRuilo\User;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use JWTAuth;
+//use JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+use Tymon\JWTAuth\Middleware\RefreshToken;
 
 class LoginController extends Controller
 {
@@ -34,17 +37,20 @@ class LoginController extends Controller
 
         return response()->json([
             'token' => $token,
-            'user' => Auth::user()->active
+            'user' => Auth::user()
         ],200);
     }
 
     public function checkAuth(){
-        if(Auth::user()){
-            return response()->json(Auth::id());
-        }
 
-        else{
-            return response()->json(Auth::id());
-        }
+        $this->middleware('user1');
+
+        $user = JWTAuth::parseToken()->authenticate();
+
+        return response()->json([
+            'user' => $user,
+        ]);
+
     }
+
 }

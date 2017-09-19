@@ -11,7 +11,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('user9');
 
     }
     public function getUsers(){
@@ -19,6 +19,9 @@ class UserController extends Controller
     }
 
     public function createUser(Request $request){
+
+        $auth = JWTAuth::parseToken()->authenticate();
+
         $user = new User();
 
         $user->name = $request->name;
@@ -27,6 +30,7 @@ class UserController extends Controller
         $user->type = $request->type;
         $user->phone = $request->phone;
         $user->enterprise = $request->enterprise;
+        $this->createBy = $auth->id;
 
         $user->save();
 
