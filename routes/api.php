@@ -34,3 +34,5 @@ Route::post('visiflex/user/sugest', 'UserController@sugestUsers');
 
 Route::post('visiflex/task/create', 'TaskController@create');
 Route::get('visiflex/task/getTasks', 'TaskController@getTasks');
+Route::put('visiflex/task/update', 'TaskController@update');
+Route::delete('visiflex/task/delete/{id}', 'TaskController@delete');
