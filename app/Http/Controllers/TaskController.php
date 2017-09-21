@@ -21,6 +21,8 @@ class TaskController extends Controller
             $task->userName = $user->name;
             $creator = User::find($task->createBy);
             $task->createByName = $creator->name;
+
+            if(TaskProgress::where('',))
         }
 
         return response()->json(['tasks' => $tasks]);
@@ -65,20 +67,14 @@ class TaskController extends Controller
     public function delete($id) {
         $task = Task::find($id);
         TaskProgress::where('taskId', $task->id)->delete();
-//
-//        $progresses = TaskProgress::where('taskId', $task->id)->get();
-//        $progresses = TaskProgress::all();
-//        foreach($progresses as $x){
-//            TaskProgress::destroy($x->id);
-//        }
-
         Task::destroy($id);
-
-//        return response()->json(['message' => $request->all()]);
 
         return response()->json(['message' => "Task and Progresses Task deleted"]);
 
     }
 
 
+    public function getProgresses($id){
+        return response()->json(['progress' => TaskProgress::where('taskId', $id)->get()]);
+    }
 }
