@@ -38,3 +38,4 @@ Route::put('visiflex/task/update', 'TaskController@update');
 Route::delete('visiflex/task/delete/{id}', 'TaskController@delete');
 
 Route::get('visiflex/task/progress/{id}' , 'TaskController@getProgresses');
+Route::put('visiflex/task/updateProgress', 'TaskController@updateProgress');
