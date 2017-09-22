@@ -16,8 +16,10 @@ class Cors
     public function handle($request, Closure $next)
     {
         return $next($request)
-            ->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Origin', 'http://localhost:4200')
             ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-XSRF-TOKEN, Authorization');
+//            ->header('Access-Control-Allow-Headers', 'X-XSRF-TOKEN, Authorization')
+//            ->header('Access-Control-Allow-Headers', 'X-XSRF-TOKEN, Authorization');
     }
 }
