@@ -18,15 +18,38 @@ class TaskController extends Controller
         $tasks = Task::where('userId','<>', $auth->id)->orderBy('id', 'desc')->get();
 
         foreach($tasks as $task) {
+
+//          Asignar nombres de creador y de editor referente a los usuarios
+
             $user = User::find($task->userId);
             $task->userName = $user->name;
             $creator = User::find($task->createBy);
             $task->createByName = $creator->name;
 
-            $progress = TaskProgress::where('taskId', $task->id)->orderBy('id','desc')->first();
-            if($progress != NULL) $task->last_progress = $progress->created_at;
+//Asignar ultimo progreso, ultima fecha de entrada de ultimo progreso, si ya fue leido el ultimo progreso
 
-//            if(TaskProgress::where('',))
+            $progress = TaskProgress::where('taskId', $task->id)->orderBy('id','desc')->first();
+            if($progress != NULL) {
+                $task->last_progress = $progress->created_at;
+                if($progress->read  == 0){
+                    $task->toRead = 1;
+                } else { $task->toRead = 0;}
+
+                if($progress->progress == NULL){
+                    $task->progress = $this->checkPercentaje( TaskProgress::where('taskId', $task->id)->orderBy('id','desc')->select('id','progress')->get());
+                } else {
+                    $task->progress == $progress->progress;
+                }
+            }
+            else {
+                $task->progress  = 0;
+                $task->toRead = 0;
+            }
+
+            if($task->status == 1) $task->progress = 100;
+
+
+
         }
 
         return response()->json(['tasks' => $tasks]);
@@ -95,7 +118,26 @@ class TaskController extends Controller
 
         $progress->save();
 
+        $task = Task::find($progress->taskId);
+        if($progress->progress == 100) {
+            $task->status = 1;
+            $task->save();
+        } else {
+            if($task->status == 1) {
+                $task->status = 0;
+                $task->save();
+            }
+        }
+
         $progress->edit = false;
         return response()->json(['progress' => $progress]);
+    }
+
+    public function checkPercentaje($progresses){
+        foreach($progresses as $progress){
+            if($progress->progress != NULL)  return $progress->progress;
+        }
+
+        return 0;
     }
 }
