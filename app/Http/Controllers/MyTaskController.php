@@ -18,11 +18,13 @@ class MyTaskController extends Controller
             ['userId', $auth->id],
             ['title','LIKE', '%'. $request->toSearch .'%']])
             ->orderBy('status', 'asc')
-            ->orderBy('id', $request->id)->get();
+            ->orderBy('id', $request->id)->paginate($request->paginate);
 
         foreach($tasks as $task) {
 
 //          Asignar nombres de creador y de editor referente a los usuarios
+            $user = User::find($task->userId);
+            $task->userName = $user->name;
             $creator = User::find($task->createBy);
             $task->createByName = $creator->name;
 

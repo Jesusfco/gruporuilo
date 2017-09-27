@@ -16,8 +16,12 @@ class UserController extends Controller
         $this->middleware('user9');
 
     }
-    public function getUsers(){
-        return response()->json(User::all());
+    public function getUsers( Request $request){
+        $users = User::where('name','LIKE', '%'. $request->toSearch .'%')
+            ->orderBy('name', 'asc')
+            ->paginate($request->paginate);
+
+        return response()->json($users);
     }
 
     public function createUser(Request $request){

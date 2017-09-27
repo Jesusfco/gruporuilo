@@ -16,11 +16,23 @@ class TaskController extends Controller
     public function getTasks(Request $request){
 
         $auth = JWTAuth::parseToken()->authenticate();
-        $tasks = Task::where([
-                        ['userId','<>', $auth->id],
-                        ['title','LIKE', '%'. $request->toSearch .'%']])
-                        ->orderBy('status', 'asc')
-                        ->orderBy('id', $request->id)->paginate($request->paginate);
+        if($request->type == false) {
+            $tasks = Task::where([
+                ['userId', '<>', $auth->id],
+                ['title', 'LIKE', '%' . $request->toSearch . '%']])
+                ->orderBy('status', 'asc')
+                ->orderBy('id', $request->id)->paginate($request->paginate);
+        }
+        else if($request->type == true) {
+
+         $user = User::where('name', $request->toSearch )->first();
+
+            $tasks = Task::where([
+//                ['userId', '<>', $auth->id],
+                ['userId', '=', $user->id]])
+                ->orderBy('status', 'asc')
+                ->orderBy('id', $request->id)->paginate($request->paginate);
+        }
 
         foreach($tasks as $task) {
 
