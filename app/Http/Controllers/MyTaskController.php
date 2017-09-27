@@ -14,7 +14,11 @@ class MyTaskController extends Controller
 
     public function getTasks(Request $request){
         $auth = JWTAuth::parseToken()->authenticate();
-        $tasks = Task::where('userId','=', $auth->id)->orderBy('id', 'desc')->get();
+        $tasks = Task::where([
+            ['userId', $auth->id],
+            ['title','LIKE', '%'. $request->toSearch .'%']])
+            ->orderBy('status', 'asc')
+            ->orderBy('id', $request->id)->get();
 
         foreach($tasks as $task) {
 
@@ -34,7 +38,7 @@ class MyTaskController extends Controller
                 if($progress->progress == NULL){
                     $task->progress = $this->checkPercentaje( TaskProgress::where('taskId', $task->id)->orderBy('id','desc')->select('id','progress')->get());
                 } else {
-                    $task->progress == $progress->progress;
+                    $task->progress = $progress->progress;
                 }
             }
             else {
@@ -42,13 +46,14 @@ class MyTaskController extends Controller
                 $task->toRead = 0;
             }
 
-            if($task->status == 1) $task->progress = 100;
-
         }
 
         return response()->json(['tasks' => $tasks]);
     }
 
+    public function getProgresses($id){
+        return response()->json(['progress' => TaskProgress::where('taskId', $id)->orderBy('id','desc')->get()]);
+    }
 
     public function createProgress(Request $request){
         $progress =  new TaskProgress();
