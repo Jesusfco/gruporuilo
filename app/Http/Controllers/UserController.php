@@ -87,13 +87,43 @@ class UserController extends Controller
     }
 
     public function sugestUsers(Request $request){
-        $users = User::where([
-                        ['name', 'LIKE', $request->name . '%'],
-                        ['active', 1],
-                        ['type', '<',10]
-                        ])->select('name','id')->get();
+        $auth = JWTAuth::parseToken()->authenticate();
+
+        if($auth->type == 10) {
+            $users = User::where([
+                ['name', 'LIKE', '%' . $request->name . '%'],
+                ['active', 1],
+                ['type', '<',10]
+            ])->select('name','id')->get();
+        } else {
+            $users = User::where([
+                ['name', 'LIKE', '%'. $request->name . '%'],
+                ['active', 1],
+                ['type', '<',9]
+            ])->select('name','id')->get();
+        }
+
 
         return response()->json([ 'users' => $users]);
+    }
+
+    public function mailExist(Request $request) {
+        $user = User::where('email','=', $request->email )->first();
+        if($user !== NULL){
+            return response()->json(1);
+        }
+
+        return response()->json(0);
+    }
+
+    public function nameExist(Request $request) {
+        $user = User::where('name', $request->name )->first();
+
+        if($user !== NULL){
+            return response()->json(['message' => 'asignado'], 402);
+        }
+
+        return response()->json(['uniqueName' => 'libre']);
     }
 
 }

@@ -33,6 +33,9 @@ Route::post('visiflex/user/find', 'UserController@findUser');
 Route::post('visiflex/user/findId', 'UserController@findUserId');
 Route::post('visiflex/user/sugest', 'UserController@sugestUsers');
 
+Route::post('visiflex/user/mailExist', 'UserController@mailExist');
+Route::post('visiflex/user/nameExist', 'UserController@nameExist');
+
 //CONTROLADOR PARA TAREAS
 
 Route::post('visiflex/task/create', 'TaskController@create');

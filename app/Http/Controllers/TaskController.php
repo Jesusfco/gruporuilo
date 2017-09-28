@@ -16,6 +16,7 @@ class TaskController extends Controller
     public function getTasks(Request $request){
 
         $auth = JWTAuth::parseToken()->authenticate();
+
         if($request->type == false) {
             $tasks = Task::where([
                 ['userId', '<>', $auth->id],

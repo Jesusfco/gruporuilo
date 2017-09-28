@@ -23,7 +23,7 @@ class UserType9Middleware
             return response()->json(['message' => 'User not found'], 404);
         }else if(! Auth::user()->active == 1) {
             return response()->json(['message' => 'User disable'], 403);
-        }else if(Auth::user()->type === 9 ||  Auth::user()->type === 10) {
+        }else if($user->type >= 9) {
             return $next($request);
         }
         else {
