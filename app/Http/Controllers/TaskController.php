@@ -87,18 +87,23 @@ class TaskController extends Controller
     }
 
     public function create(Request $request) {
-        $task = new Task();
-
         $auth = JWTAuth::parseToken()->authenticate();
 
+        $task = new Task();
         $task->title =  $request->title;
         $task->userId = $request->userId;
         $task->description = $request->description;
         $task->level = $request->level;
-
         $task->createBy = $auth->id;
 
         $task->save();
+
+        $user = User::find($task->userId);
+        $task->userName = $user->name;
+        $creator = User::find($task->createBy);
+        $task->createByName = $creator->name;
+
+
 
         return response()->json(['task' => $task]);
 

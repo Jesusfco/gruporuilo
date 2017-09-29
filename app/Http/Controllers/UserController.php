@@ -18,6 +18,7 @@ class UserController extends Controller
     }
     public function getUsers( Request $request){
         $users = User::where('name','LIKE', '%'. $request->toSearch .'%')
+            ->orderBy('type', 'asc')
             ->orderBy('name', 'asc')
             ->paginate($request->paginate);
 
