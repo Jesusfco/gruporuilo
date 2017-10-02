@@ -18,8 +18,8 @@ class UserController extends Controller
     }
     public function getUsers( Request $request){
         $users = User::where('name','LIKE', '%'. $request->toSearch .'%')
-            ->orderBy('type', 'asc')
-            ->orderBy('name', 'asc')
+            ->orderBy('type', $request->type)
+            ->orderBy('name', $request->name)
             ->paginate($request->paginate);
 
         return response()->json($users);
@@ -125,6 +125,13 @@ class UserController extends Controller
         }
 
         return response()->json(['uniqueName' => 'libre']);
+    }
+
+    public function activeUser($id, Request $request){
+         $user = User::find($id);
+         $user->active = $request->active;
+         $user->save();
+         return response()->json(['user' => $user]);
     }
 
 }

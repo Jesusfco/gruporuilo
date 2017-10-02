@@ -92,7 +92,7 @@ class TaskController extends Controller
         $task = new Task();
         $task->title =  $request->title;
         $task->userId = $request->userId;
-        $task->description = $request->description;
+        $task->description = rawurlencode(str_replace("%0D%0A","<br>", (rawurlencode($request->description))));
         $task->level = $request->level;
         $task->createBy = $auth->id;
 
@@ -115,7 +115,7 @@ class TaskController extends Controller
 
         $task->title =  $request->title;
         $task->userId = $request->userId;
-        $task->description = $request->description;
+        $task->description = rawurlencode(str_replace("%0D%0A","<br>", (rawurlencode($request->description))));
         $task->level = $request->level;
 
         $task->save();
