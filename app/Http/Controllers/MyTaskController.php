@@ -66,6 +66,8 @@ class MyTaskController extends Controller
         $progress->taskId = $request->taskId;
         $progress->save();
 
+        $progress->createByName = (User::find($progress->createBy))->name;
+
         return response()->json(['progress' => $progress]);
     }
 

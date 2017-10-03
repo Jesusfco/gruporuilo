@@ -44,6 +44,10 @@ class TaskController extends Controller
             $creator = User::find($task->createBy);
             $task->createByName = $creator->name;
 
+//            $breaks = array("<br />","<br>","<br/>");
+//            $task->descriptionEdit = str_ireplace($breaks, "\r\n", $task->description);
+
+
 //Asignar ultimo progreso, ultima fecha de entrada de ultimo progreso, si ya fue leido el ultimo progreso
 
             $progress = TaskProgress::where('taskId', $task->id)->orderBy('id','desc')->first();
@@ -89,10 +93,13 @@ class TaskController extends Controller
     public function create(Request $request) {
         $auth = JWTAuth::parseToken()->authenticate();
 
+//        $texto = rawurlencode($request->description);
+//        $texto = rawurldecode(str_replace("%0D%0A","<br>",$texto));
+
         $task = new Task();
         $task->title =  $request->title;
         $task->userId = $request->userId;
-        $task->description = rawurlencode(str_replace("%0D%0A","<br>", (rawurlencode($request->description))));
+        $task->description = $request->description;
         $task->level = $request->level;
         $task->createBy = $auth->id;
 
@@ -112,16 +119,22 @@ class TaskController extends Controller
     public function update(Request $request){
 
         $task = Task::find($request->id);
+//
+//        $texto = rawurlencode($request->descriptionEdit);
+//        $texto = rawurldecode(str_replace("%0D%0A","<br>",$texto));
 
         $task->title =  $request->title;
         $task->userId = $request->userId;
-        $task->description = rawurlencode(str_replace("%0D%0A","<br>", (rawurlencode($request->description))));
+        $task->description = $request->description;
         $task->level = $request->level;
 
         $task->save();
 
         $user = User::find($task->userId);
         $task->userName = $user->name;
+
+//        $breaks = array("<br />","<br>","<br/>");
+//        $task->descriptionEdit = str_ireplace($breaks, "\r\n", $task->description);
 
         return response()->json(['task' => $task]);
 
@@ -138,7 +151,11 @@ class TaskController extends Controller
 
 
     public function getProgresses($id){
-        return response()->json(['progress' => TaskProgress::where('taskId', $id)->orderBy('id','desc')->get()]);
+        $progresses = TaskProgress::where('taskId', $id)->orderBy('id','desc')->get();
+        foreach($progresses as $x){
+            $x->createByName = (User::find($x->createBy))->name;
+        }
+        return response()->json(['progress' => $progresses]);
     }
 
     public function updateProgress(Request $request){
@@ -150,7 +167,7 @@ class TaskController extends Controller
         $progress->observation = $request->observation;
         $progress->read = 1;
         $progress->modifyBy = $auth->id;
-//        $progress->readTime = TaskProgress::timestamp();
+        $progress->readTime = date_create();
 
         $progress->save();
 
@@ -164,6 +181,8 @@ class TaskController extends Controller
                 $task->save();
             }
         }
+
+        $progress->createByName = (User::find($progress->createBy))->name;
 
         $progress->edit = false;
         return response()->json(['progress' => $progress]);
