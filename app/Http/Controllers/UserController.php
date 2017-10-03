@@ -4,6 +4,8 @@ namespace GrupoRuilo\Http\Controllers;
 
 use Illuminate\Http\Request;
 use GrupoRuilo\User;
+use GrupoRuilo\TaskProgress;
+use GrupoRuilo\Task;
 use GrupoRuilo\Credential;
 use JWTAuth;
 use Illuminate\Support\Facades\Auth;
@@ -132,6 +134,25 @@ class UserController extends Controller
          $user->active = $request->active;
          $user->save();
          return response()->json(['user' => $user]);
+    }
+
+    public function delete(Request $request){
+        User::destroy($request->id);
+        return response()->json(['message' => "User deleted!"]);
+
+    }
+
+    public function checkBeforeDelete(Request $request){
+        $tasks = Task::where('userId', $request->id)->get();
+        $amountTasks = 0;
+        foreach($tasks as $x){ $amountTasks++; }
+
+        $progresses = TaskProgress::where('createBy', $request->id)->get();
+        $amountProgress = 0;
+        foreach($progresses as $x){ $amountProgress++; }
+
+        return response()->json(['tasks' => $amountTasks, 'progresses' => $amountProgress]);
+
     }
 
 }
