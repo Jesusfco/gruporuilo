@@ -64,7 +64,7 @@ class Handler extends ExceptionHandler
             return Response::json([
                 'error' => 'Error fetching Token'
             ], $exception->getStatusCode());
-    }
+        }
         return parent::render($request, $exception);
     }
 }

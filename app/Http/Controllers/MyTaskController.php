@@ -54,10 +54,22 @@ class MyTaskController extends Controller
     }
 
     public function getProgresses($id){
-        return response()->json(['progress' => TaskProgress::where('taskId', $id)->orderBy('id','desc')->get()]);
+        $progresses = TaskProgress::where('taskId', $id)->orderBy('id','desc')->get();
+        foreach($progresses as $x){
+            $x->createByName = (User::find($x->createBy))->name;
+            if($x->modifyBy != NULL)
+                $x->modifyByName = (User::find($x->modifyBy))->name;
+
+        }
+        return response()->json(['progress' => $progresses]);
+//            return response()->json(['progress' => TaskProgress::where('taskId', $id)->orderBy('id','desc')->get()]);
     }
 
     public function createProgress(Request $request){
+
+        if(TaskProgress::where('message', 'LIKE', "%". $request->message. "%")->first() != NULL)
+            return response()->json(['error' => "You are duplicating an progress"], 402);
+
         $progress =  new TaskProgress();
         $auth = JWTAuth::parseToken()->authenticate();
 

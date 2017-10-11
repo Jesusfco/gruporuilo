@@ -154,6 +154,11 @@ class TaskController extends Controller
         $progresses = TaskProgress::where('taskId', $id)->orderBy('id','desc')->get();
         foreach($progresses as $x){
             $x->createByName = (User::find($x->createBy))->name;
+            if($x->modifyBy != NULL)
+                $x->modifyByName = (User::find($x->modifyBy))->name;
+//            if($x->readTime == NULL){
+//
+//            }
         }
         return response()->json(['progress' => $progresses]);
     }
@@ -194,5 +199,11 @@ class TaskController extends Controller
         }
 
         return 0;
+    }
+
+    public function deleteProgress($id){
+        TaskProgress::destroy($id);
+
+        return response()->json(['message' => "Progress #". $id . " destroy"]);
     }
 }
