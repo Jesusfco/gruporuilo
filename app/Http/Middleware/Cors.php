@@ -22,3 +22,5 @@ class Cors
 //            ->header('Access-Control-Allow-Headers', 'X-XSRF-TOKEN, Authorization');
     }
 }
+
+
